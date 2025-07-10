@@ -17,7 +17,7 @@ local petTable = {
     ["AntiBee Egg"] = { "Wasp", "Moth", "Tarantula Hawk" },
     ["Oasis Egg"] = { "Meerkat", "Sand Snake", "Axolotl", },
     ["Paradise Egg"] = { "Ostrich", "Peacock", "Capybara", },
-    ["Dinosaurs Egg"] = {"Raptor", "Triceratops", "Stegosaurus", },
+    ["Dinosaurs Egg"] = { "Raptor", "Triceratops", "Stegosaurus", },
 }
 
 local espEnabled = true
