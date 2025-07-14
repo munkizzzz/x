@@ -15,10 +15,10 @@ local petTable = {
     ["Night Egg"] = { "Frog", "Hedgehog", "Mole", "Echo Frog", "Night Owl", "Raccoon" },
     ["Bee Egg"] = { "Bee", "Honey Bee", "Bear Bee", "Petal Bee" },
     ["AntiBee Egg"] = { "Wasp", "Moth", "Tarantula Hawk" },
-    ["Oasis Egg"] = { "Meerkat", "Sand Snake", "Axolotl", },
-    ["Paradise Egg"] = { "Ostrich", "Peacock", "Capybara", },
-    ["Dinosaurs Egg"] = { "Raptor", "Triceratops", "Stegosaurus", },
-    ["Primal Egg"] = { "Parasaurolophus", "Iguanodon", "Dilophosaurus", },
+    ["Oasis Egg"] = { "Meerkat", "Sand Snake", "Axolotl" },
+    ["Paradise Egg"] = { "Ostrich", "Peacock", "Capybara" },
+    ["Dinosaurs Egg"] = { "Raptor", "Triceratops", "Stegosaurus" },
+    ["Primal Egg"] = { "Parasaurolophus", "Iguanodon", "Dilophosaurus" },
 }
 
 local espEnabled = true
