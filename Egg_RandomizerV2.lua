@@ -1,5 +1,3 @@
-These one add a timer on this like a countdown
-
 -- LocalScript (put in StarterPlayerScripts or StarterGui)
 
 local Players = game:GetService("Players")
