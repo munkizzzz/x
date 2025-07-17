@@ -298,24 +298,38 @@ credit.Font = Enum.Font.FredokaOne
 credit.TextSize = 14
 credit.TextColor3 = Color3.fromRGB(200, 200, 200)
 
--- 👆 Keep your existing script as-is until this point...
+-- Create draggable load button for Pet Age Script
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
 
--- ⚡ Load Age Pet Script Button
-local loadAgePetBtn = Instance.new("TextButton", frame)
-loadAgePetBtn.Size = UDim2.new(1, -20, 0, 30)
-loadAgePetBtn.Position = UDim2.new(0, 10, 1, -35)
-loadAgePetBtn.BackgroundColor3 = Color3.fromRGB(70, 100, 200)
-loadAgePetBtn.Text = "⚡ Load Auto Pet Age"
-loadAgePetBtn.TextSize = 16
-loadAgePetBtn.Font = Enum.Font.FredokaOne
-loadAgePetBtn.TextColor3 = Color3.new(1, 1, 1)
+local petGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+petGui.Name = "PetAgeLoader"
+petGui.ResetOnSpawn = false
 
-loadAgePetBtn.MouseButton1Click:Connect(function()
-    loadAgePetBtn.Text = "⚡ Loading..."
-    pcall(function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/munkizzzz/x/refs/heads/main/Egg_RandomizerV2.lua"))()
-    end)
-    loadAgePetBtn.Text = "✅ Auto Pet Age Loaded"
-    wait(2)
-    loadAgePetBtn.Text = "⚡ Load Auto Pet Age"
+local buttonFrame = Instance.new("Frame", petGui)
+buttonFrame.Size = UDim2.new(0, 160, 0, 50)
+buttonFrame.Position = UDim2.new(0.5, -80, 0.8, 0)
+buttonFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+buttonFrame.Active = true
+buttonFrame.Draggable = true
+Instance.new("UICorner", buttonFrame)
+
+local loadButton = Instance.new("TextButton", buttonFrame)
+loadButton.Size = UDim2.new(1, 0, 1, 0)
+loadButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+loadButton.Text = "Load Pet Age"
+loadButton.Font = Enum.Font.GothamBold
+loadButton.TextSize = 16
+loadButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+Instance.new("UICorner", loadButton)
+
+-- Load script on button click
+loadButton.MouseButton1Click:Connect(function()
+	loadButton.Text = "Loading..."
+	pcall(function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/munkizzzz/x/refs/heads/main/Egg_RandomizerV2.lua"))()
+	end)
+	loadButton.Text = "Loaded ✅"
+	wait(2)
+	loadButton.Text = "Load Pet Age"
 end)
