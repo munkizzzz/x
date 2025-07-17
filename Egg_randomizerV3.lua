@@ -1,10 +1,12 @@
--- Visual pet hatch simulator - countdown, toggle ESP, player garden only
+-- Visual pet hatch simulator with drag, ESP, auto random, pet age loader
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
+local mouse = player:GetMouse()
 
--- 🐣 Full pet mapping (updated from IGN + your requests)
 local petTable = {
     ["Common Egg"] = { "Dog", "Bunny", "Golden Lab" },
     ["Uncommon Egg"] = { "Chicken", "Black Bunny", "Cat", "Deer" },
@@ -22,8 +24,8 @@ local petTable = {
 }
 
 local espEnabled = true
+local truePetMap = {}
 
--- 💥 Glitchy label effect
 local function glitchLabelEffect(label)
     coroutine.wrap(function()
         local original = label.TextColor3
@@ -36,7 +38,6 @@ local function glitchLabelEffect(label)
     end)()
 end
 
--- 🌟 ESP visual effect: label + highlight
 local function applyEggESP(eggModel, petName)
     local existingLabel = eggModel:FindFirstChild("PetBillboard", true)
     if existingLabel then existingLabel:Destroy() end
@@ -59,7 +60,7 @@ local function applyEggESP(eggModel, petName)
 
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "PetBillboard"
-    billboard.Size = UDim2.new(0, 250, 0, 50)
+    billboard.Size = UDim2.new(0, 270, 0, 50)
     billboard.StudsOffset = Vector3.new(0, 4.5, 0)
     billboard.AlwaysOnTop = true
     billboard.MaxDistance = 500
@@ -99,8 +100,6 @@ local function removeEggESP(eggModel)
     local highlight = eggModel:FindFirstChild("ESPHighlight")
     if highlight then highlight:Destroy() end
 end
-
-local truePetMap = {}
 
 local function getPlayerGardenEggs(radius)
     local eggs = {}
@@ -155,29 +154,27 @@ local function countdownAndRandomize(button)
     button.Text = "🎲 Randomize Pets"
 end
 
--- 🌿 Garden-style GUI
+-- 🌿 GUI Setup
 local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
 screenGui.Name = "PetHatchGui"
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 240, 0, 190)
+frame.Size = UDim2.new(0, 260, 0, 240)
 frame.Position = UDim2.new(0, 20, 0, 100)
 frame.BackgroundColor3 = Color3.fromRGB(105, 80, 60)
-frame.BackgroundTransparency = 0
 frame.BorderSizePixel = 0
 frame.Parent = screenGui
-
-local corner = Instance.new("UICorner", frame)
-corner.CornerRadius = UDim.new(0, 10)
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
 
 local title = Instance.new("TextLabel", frame)
 title.Size = UDim2.new(1, 0, 0, 30)
 title.BackgroundTransparency = 1
-title.Text = "🌱 Garden Hatch"
+title.Text = "🐾 Pet Randomizer ✨"
 title.Font = Enum.Font.FredokaOne
 title.TextSize = 22
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 
+-- 👇 Dragging
 local drag = Instance.new("TextButton", title)
 drag.Size = UDim2.new(1, 0, 1, 0)
 drag.Text = ""
@@ -188,10 +185,10 @@ drag.MouseButton1Down:Connect(function()
     dragging = true
     offset = Vector2.new(mouse.X - frame.Position.X.Offset, mouse.Y - frame.Position.Y.Offset)
 end)
-game:GetService("UserInputService").InputEnded:Connect(function()
+UserInputService.InputEnded:Connect(function()
     dragging = false
 end)
-game:GetService("RunService").RenderStepped:Connect(function()
+RunService.RenderStepped:Connect(function()
     if dragging then
         frame.Position = UDim2.new(0, mouse.X - offset.X, 0, mouse.Y - offset.Y)
     end
@@ -206,7 +203,6 @@ randomizeBtn.Text = "🎲 Randomize Pets"
 randomizeBtn.TextSize = 20
 randomizeBtn.Font = Enum.Font.FredokaOne
 randomizeBtn.TextColor3 = Color3.new(1, 1, 1)
-
 randomizeBtn.MouseButton1Click:Connect(function()
     countdownAndRandomize(randomizeBtn)
 end)
@@ -220,7 +216,6 @@ toggleBtn.Text = "👁️ ESP: ON"
 toggleBtn.TextSize = 18
 toggleBtn.Font = Enum.Font.FredokaOne
 toggleBtn.TextColor3 = Color3.new(1, 1, 1)
-
 toggleBtn.MouseButton1Click:Connect(function()
     espEnabled = not espEnabled
     toggleBtn.Text = espEnabled and "👁️ ESP: ON" or "👁️ ESP: OFF"
@@ -238,14 +233,6 @@ for _, egg in pairs(getPlayerGardenEggs(60)) do
     applyEggESP(egg, truePetMap[egg])
 end
 
--- 🟣 Initial ESP
-for _, egg in pairs(getPlayerGardenEggs(60)) do
-    applyEggESP(egg, truePetMap[egg])
-end
-
--- 🏷 Rename Title
-title.Text = "🐾 Pet Randomizer ✨"
-
 -- 🔁 Auto Randomize Button
 local autoBtn = Instance.new("TextButton", frame)
 autoBtn.Size = UDim2.new(1, -20, 0, 30)
@@ -256,24 +243,19 @@ autoBtn.TextSize = 16
 autoBtn.Font = Enum.Font.FredokaOne
 autoBtn.TextColor3 = Color3.new(1, 1, 1)
 
--- Best Pets to stop auto on
+local autoRunning = false
 local bestPets = {
     ["Raccoon"] = true, ["Dragonfly"] = true, ["Queen Bee"] = true,
     ["Disco Bee"] = true, ["Fennec Fox"] = true, ["Fox"] = true,
     ["Mimic Octopus"] = true
 }
 
-local autoRunning = false
-
 autoBtn.MouseButton1Click:Connect(function()
     autoRunning = not autoRunning
     autoBtn.Text = autoRunning and "🔁 Auto Randomize: ON" or "🔁 Auto Randomize: OFF"
-
     coroutine.wrap(function()
         while autoRunning do
             countdownAndRandomize(randomizeBtn)
-
-            -- Stop if any best pet is rolled
             for _, petName in pairs(truePetMap) do
                 if bestPets[petName] then
                     autoRunning = false
@@ -281,14 +263,26 @@ autoBtn.MouseButton1Click:Connect(function()
                     return
                 end
             end
-
             wait(1)
         end
     end)()
 end)
 
+-- ✨ Cool Load Pet Age Script Button
+local loadAgeBtn = Instance.new("TextButton", frame)
+loadAgeBtn.Size = UDim2.new(1, -20, 0, 30)
+loadAgeBtn.Position = UDim2.new(0, 10, 1, -35)
+loadAgeBtn.BackgroundColor3 = Color3.fromRGB(100, 90, 200)
+loadAgeBtn.Text = "🕒 Load Pet Age 50 Script"
+loadAgeBtn.TextSize = 16
+loadAgeBtn.Font = Enum.Font.FredokaOne
+loadAgeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 
--- 🧾 Credit under title
+loadAgeBtn.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/munkizzzz/x/refs/heads/main/Egg_RandomizerV2.lua"))()
+end)
+
+-- 👤 Credit
 local credit = Instance.new("TextLabel", frame)
 credit.Size = UDim2.new(1, 0, 0, 20)
 credit.Position = UDim2.new(0, 0, 0, 22)
@@ -297,39 +291,3 @@ credit.Text = "Made by - munkizzz"
 credit.Font = Enum.Font.FredokaOne
 credit.TextSize = 14
 credit.TextColor3 = Color3.fromRGB(200, 200, 200)
-
--- Create draggable load button for Pet Age Script
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-
-local petGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
-petGui.Name = "PetAgeLoader"
-petGui.ResetOnSpawn = false
-
-local buttonFrame = Instance.new("Frame", petGui)
-buttonFrame.Size = UDim2.new(0, 160, 0, 50)
-buttonFrame.Position = UDim2.new(0.5, -80, 0.8, 0)
-buttonFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-buttonFrame.Active = true
-buttonFrame.Draggable = true
-Instance.new("UICorner", buttonFrame)
-
-local loadButton = Instance.new("TextButton", buttonFrame)
-loadButton.Size = UDim2.new(1, 0, 1, 0)
-loadButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-loadButton.Text = "Load Pet Age"
-loadButton.Font = Enum.Font.GothamBold
-loadButton.TextSize = 16
-loadButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-Instance.new("UICorner", loadButton)
-
--- Load script on button click
-loadButton.MouseButton1Click:Connect(function()
-	loadButton.Text = "Loading..."
-	pcall(function()
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/munkizzzz/x/refs/heads/main/Egg_RandomizerV2.lua"))()
-	end)
-	loadButton.Text = "Loaded ✅"
-	wait(2)
-	loadButton.Text = "Load Pet Age"
-end)
