@@ -7,40 +7,6 @@ local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
 local mouse = player:GetMouse()
 
--- 🔒 License Key Lock
-local licenseKey = "YOUR-UNIQUE-KEY-1234"
-local licenseCheckURL = "https://yourapi.com/check?key=" .. licenseKey
-
-local success, response = pcall(function()
-    return game:HttpGet(licenseCheckURL)
-end)
-
-if not success or response ~= "valid" then
-    error("❌ Invalid or expired license. Contact Munkizzz for access.")
-end
-
--- 🔒 HWID Lock
-local allowedHWID = "YOUR-HWID-HERE"
-local currentHWID = game:GetService("RbxAnalyticsService"):GetClientId()
-
-if currentHWID ~= allowedHWID then
-    error("❌ Unauthorized HWID detected. Access denied.")
-end
-
--- 🔒 Executor Lock
-local allowedExecutor = "Synapse X"
-local executor = identifyexecutor and identifyexecutor() or "Unknown"
-
-if executor ~= allowedExecutor then
-    error("❌ Unsupported executor: " .. executor)
-end
-
--- 🔒 Expiry Lock
-local expiryTimestamp = os.time{year=2025, month=8, day=1}
-if os.time() > expiryTimestamp then
-    error("❌ License expired. Contact Munkizzz to renew.")
-end
-
 local petTable = {
     ["Common Egg"] = { "Dog", "Bunny", "Golden Lab" },
     ["Uncommon Egg"] = { "Chicken", "Black Bunny", "Cat", "Deer" },
