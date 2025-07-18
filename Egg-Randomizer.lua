@@ -18,7 +18,7 @@ local petTable = {
     ["Bee Egg"] = { "Bee", "Honey Bee", "Bear Bee", "Petal Bee" },
     ["AntiBee Egg"] = { "Wasp", "Moth", "Tarantula Hawk" },
     ["Oasis Egg"] = { "Meerkat", "Sand Snake", "Axolotl" },
-    ["Paradise Egg"] = { "Ostrich", "Peacock", "Capybara" },
+    ["Paradise Egg"] = { "Ostrich", "Peacock", "Capybara", "Mimic Octopus" },
     ["Dinosaurs Egg"] = { "Raptor", "Triceratops", "Stegosaurus" },
     ["Primal Egg"] = { "Parasaurolophus", "Iguanodon", "Pachycephalosaurus" },
 }
