@@ -237,10 +237,6 @@ for _, egg in pairs(getPlayerGardenEggs(60)) do
     applyEggESP(egg, truePetMap[egg])
 end
 
-pcall(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/munki/xz/refs/heads/main/egg-randomizerV2"))()
-end)
-
 -- 🔁 Auto Randomize Button
 local autoBtn = Instance.new("TextButton", frame)
 autoBtn.Size = UDim2.new(1, -20, 0, 30)
